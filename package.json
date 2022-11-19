@@ -1,15 +1,21 @@
 {
-  "name": "getpocket",
+  "name": "pocket-to-blogger",
   "version": "1.0.0",
-  "description": "",
+  "description": "Get the favorited articles on pocket and post to blogger",
   "main": "index.js",
   "scripts": {
     "start": "node src/index.js"
   },
-  "keywords": [],
+  "keywords": ["blogger", "pocket"],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "dotenv": "^16.0.3",
+    "google-auth-library": "^8.7.0",
+    "googleapis": "^109.0.1",
     "node-getpocket": "^1.0.0"
+  },
+  "devDependencies": {
+    "prettier": "2.7.1"
   }
 }

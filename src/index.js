@@ -1,43 +1,37 @@
-var GetPocket = require("node-getpocket");
+const blogger = require('./blogger');
+const getpocket = require('./getpocket');
+require('dotenv').config();
 
-const config = {
-  consumer_key: "104465-f83d1b4ec297694d2f9ad87",
-  redirect_uri: "http://google.com",
-};
+const debug = { bloggerPosts: [], pocketFavPosts: [], posted: [], ignored: [] };
 
-var pocket = new GetPocket(config);
+async function main() {
+  const bloggerPosts = await blogger.listPosts();
+  const pocketFavPosts = await getpocket.listFavPosts();
 
-pocket.getRequestToken(config, function (err, resp, body) {
-  if (!err) {
-    var json = JSON.parse(body);
-    config.request_token = json.code;
+  debug.bloggerPosts = bloggerPosts;
 
-    var url = pocket.getAuthorizeURL(config);
-    console.log({ url });
+  for (const [key, post] of Object.entries(pocketFavPosts)) {
+    const title = post.resolved_title;
+    const excerpt = post.excerpt;
+    const url = post.resolved_url;
+    const image = post?.image?.src || post?.top_image_url;
+    const pocketPost = { title, excerpt, url, image };
 
-    setTimeout(() => {
-      pocket.getAccessToken(config, function (err, resp, body) {
-        if (!err) {
-          var json = JSON.parse(body);
-          config.access_token = json.access_token;
-          pocket.refreshConfig(config);
-          console.log({ config });
+    debug.pocketFavPosts.push(pocketPost);
 
-          var filteringOptions = { count: "5", detailType: "complete", favorite: "1" };
+    const isAlreadyPosted = bloggerPosts.some(
+      (bloggerPost) => bloggerPost.title === title
+    );
 
-          pocket.get(filteringOptions, function (err, resp) {
-            console.log(resp.list);
-          });
-
-          return;
-        }
-
-        console.log("Oops; getAccessTokenParams failed: " + err);
-      });
-    }, 10000);
-
-    return;
+    if (!isAlreadyPosted) {
+      await blogger.createPost(pocketPost);
+      debug.posted.push(pocketPost);
+    } else {
+      debug.ignored.push(pocketPost);
+    }
   }
 
-  console.log("Oops; getTokenRequest failed: " + err);
-});
+  console.log(JSON.stringify(debug, null, 4));
+}
+
+main();

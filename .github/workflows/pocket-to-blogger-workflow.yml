@@ -1,0 +1,33 @@
+name: Favorited pocket posts to blogger workflow
+on:
+  schedule:
+    # Runs every hour
+    - cron: '0 * * * *'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Configure Node and run the code
+        uses: actions/setup-node@v3
+
+        with:
+          node-version: '16.x'
+      - run: touch .env
+      - run: echo GOOGLE_BLOGGER_AUTH=${{ secrets.GOOGLE_BLOGGER_AUTH }} >> .env
+      - run: echo GOOGLE_BLOGGER_DEFAULT_IMAGE=${{ secrets.GOOGLE_BLOGGER_DEFAULT_IMAGE }} >> .env
+      - run: echo GOOGLE_BLOG_ID=${{ secrets.GOOGLE_BLOG_ID }} >> .env
+      - run: echo GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }} >> .env
+      - run: echo GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }} >> .env
+      - run: echo GOOGLE_REDIRECT_URI=${{ secrets.GOOGLE_REDIRECT_URI }} >> .env
+      - run: echo GOOGLE_CODE_TOKEN=${{ secrets.GOOGLE_CODE_TOKEN }} >> .env
+      - run: echo GOOGLE_ACCESS_TOKEN=${{ secrets.GOOGLE_ACCESS_TOKEN }} >> .env
+      - run: echo POCKET_CONSUMER_KEY=${{ secrets.POCKET_CONSUMER_KEY }} >> .env
+      - run: echo POCKET_REDIRECT_URI=${{ secrets.POCKET_REDIRECT_URI }} >> .env
+      - run: echo POCKET_ACCESS_TOKEN=${{ secrets.POCKET_ACCESS_TOKEN }} >> .env
+      - run: npm ci
+      - run: npm start
