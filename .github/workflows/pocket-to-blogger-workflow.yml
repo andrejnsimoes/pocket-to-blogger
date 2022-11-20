@@ -8,26 +8,46 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v3
 
-      - name: Configure Node and run the code
-        uses: actions/setup-node@v3
+      - name: Cache node modules
+        id: cache-npm
+        uses: actions/cache@v3
 
+        env:
+          cache-name: cache-node-modules
         with:
-          node-version: '16.x'
-      - run: touch .env
-      - run: echo GOOGLE_BLOGGER_AUTH=${{ secrets.GOOGLE_BLOGGER_AUTH }} >> .env
-      - run: echo GOOGLE_BLOGGER_DEFAULT_IMAGE=${{ secrets.GOOGLE_BLOGGER_DEFAULT_IMAGE }} >> .env
-      - run: echo GOOGLE_BLOG_ID=${{ secrets.GOOGLE_BLOG_ID }} >> .env
-      - run: echo GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }} >> .env
-      - run: echo GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }} >> .env
-      - run: echo GOOGLE_REDIRECT_URI=${{ secrets.GOOGLE_REDIRECT_URI }} >> .env
-      - run: echo GOOGLE_CODE_TOKEN=${{ secrets.GOOGLE_CODE_TOKEN }} >> .env
-      - run: echo GOOGLE_REFRESH_TOKEN=${{ secrets.GOOGLE_REFRESH_TOKEN }} >> .env
-      - run: echo POCKET_CONSUMER_KEY=${{ secrets.POCKET_CONSUMER_KEY }} >> .env
-      - run: echo POCKET_REDIRECT_URI=${{ secrets.POCKET_REDIRECT_URI }} >> .env
-      - run: echo POCKET_ACCESS_TOKEN=${{ secrets.POCKET_ACCESS_TOKEN }} >> .env
-      - run: npm ci
-      - run: npm start
+          # npm cache files are stored in `~/.npm` on Linux/macOS
+          path: ~/.npm
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+
+      - if: ${{ steps.cache-npm.outputs.cache-hit != 'true' }}
+        name: List the state of node modules
+        continue-on-error: true
+        run: npm list
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Set env vars
+        run: |
+          touch .env 
+          echo GOOGLE_BLOGGER_AUTH=${{ secrets.GOOGLE_BLOGGER_AUTH }} >> .env
+          echo GOOGLE_BLOGGER_DEFAULT_IMAGE=${{ secrets.GOOGLE_BLOGGER_DEFAULT_IMAGE }} >> .env
+          echo GOOGLE_BLOG_ID=${{ secrets.GOOGLE_BLOG_ID }} >> .env
+          echo GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }} >> .env
+          echo GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }} >> .env
+          echo GOOGLE_REDIRECT_URI=${{ secrets.GOOGLE_REDIRECT_URI }} >> .env
+          echo GOOGLE_CODE_TOKEN=${{ secrets.GOOGLE_CODE_TOKEN }} >> .env
+          echo GOOGLE_REFRESH_TOKEN=${{ secrets.GOOGLE_REFRESH_TOKEN }} >> .env
+          echo POCKET_CONSUMER_KEY=${{ secrets.POCKET_CONSUMER_KEY }} >> .env
+          echo POCKET_REDIRECT_URI=${{ secrets.POCKET_REDIRECT_URI }} >> .env
+          echo POCKET_ACCESS_TOKEN=${{ secrets.POCKET_ACCESS_TOKEN }} >> .env
+
+      - name: Run the script
+        run: npm start
