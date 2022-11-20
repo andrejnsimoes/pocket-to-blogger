@@ -23,10 +23,13 @@ function authorize() {
       process.env.GOOGLE_REDIRECT_URI
     );
 
-    if (process.env.GOOGLE_ACCESS_TOKEN) {
-      auth.setCredentials({ access_token: process.env.GOOGLE_ACCESS_TOKEN });
+    if (process.env.GOOGLE_REFRESH_TOKEN) {
+      auth.setCredentials({
+        refresh_token: process.env.GOOGLE_REFRESH_TOKEN,
+      });
+
       google.options({ auth });
-      resolve('GOOGLE_ACCESS_TOKEN already defined');
+      resolve('GOOGLE_REFRESH_TOKEN already defined');
       return;
     }
 
@@ -43,7 +46,7 @@ function authorize() {
 
     const { tokens } = await auth.getToken(process.env.GOOGLE_CODE_TOKEN);
     console.log({ tokens });
-    reject('GOOGLE_ACCESS_TOKEN to be defined');
+    reject('GOOGLE_REFRESH_TOKEN to be defined');
   });
 }
 
