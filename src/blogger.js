@@ -54,7 +54,8 @@ async function createPost({ title, excerpt, url, image = defaultImage }) {
   await authorize();
 
   const content =
-    `<div class="ajs_post_separator"><a href="${image}" class="ajs_post_img_link"><img class="ajs_post_img" src="${image}" /></a></div>\n` +
+    `<div class="ajs_post_separator"><a href="${image}" class="ajs_post_img_link">` + 
+    `<img class="ajs_post_img" onerror="this.src=\'https://lh3.googleusercontent.com/-xXiVLUL1PQg/VJ8HJGh11vI/AAAAAAAAFbQ/IP2Vky0DlOo/w498-h255-no/3bd01cb.jpg\'" src="${image}" /></a></div>\n` +
     '<br />\n' +
     `${excerpt}<br />\n` +
     '<br />\n' +
