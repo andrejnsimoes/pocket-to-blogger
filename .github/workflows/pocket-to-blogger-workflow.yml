@@ -1,8 +1,8 @@
 name: Favorited pocket posts to blogger workflow
 on:
   schedule:
-    # Runs every 9 hours
-    - cron: '0 */9 * * *'
+    # Runs every 12 hours
+    - cron: '0 */12 * * *'
   workflow_dispatch:
 
 jobs:
