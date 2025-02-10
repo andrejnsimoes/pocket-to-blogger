@@ -48,6 +48,9 @@ jobs:
           echo POCKET_CONSUMER_KEY=${{ secrets.POCKET_CONSUMER_KEY }} >> .env
           echo POCKET_REDIRECT_URI=${{ secrets.POCKET_REDIRECT_URI }} >> .env
           echo POCKET_ACCESS_TOKEN=${{ secrets.POCKET_ACCESS_TOKEN }} >> .env
+          echo BSKY_USERNAME=${{ secrets.BSKY_USERNAME }} >> .env
+          echo BSKY_PASSWORD=${{ secrets.BSKY_PASSWORD }} >> .env
+          echo POST_DEFAULT_IMAGE=${{ secrets.POST_DEFAULT_IMAGE }} >> .env
 
       - name: Run the script
         run: npm start

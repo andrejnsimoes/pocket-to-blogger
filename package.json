@@ -6,10 +6,15 @@
   "scripts": {
     "start": "node src/index.js"
   },
-  "keywords": ["blogger", "pocket"],
+  "keywords": [
+    "blogger",
+    "pocket"
+  ],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@atproto/api": "0.13.35",
+    "axios": "^1.7.9",
     "dotenv": "^16.0.3",
     "google-auth-library": "^8.7.0",
     "googleapis": "^109.0.1",

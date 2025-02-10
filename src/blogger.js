@@ -7,10 +7,6 @@ require('dotenv').config();
 
 const blogger = google.blogger('v3');
 
-const defaultImage =
-  process.env.GOOGLE_BLOGGER_DEFAULT_IMAGE ||
-  'https://lh3.googleusercontent.com/-xXiVLUL1PQg/VJ8HJGh11vI/AAAAAAAAFbQ/IP2Vky0DlOo/w498-h255-no/3bd01cb.jpg';
-
 function sleep(millis) {
   return new Promise((resolve) => setTimeout(resolve, millis));
 }
@@ -50,7 +46,7 @@ function authorize() {
   });
 }
 
-async function createPost({ title, excerpt, url, image = defaultImage }) {
+async function createPost({ title, excerpt, url, image }) {
   await authorize();
 
   const content =
