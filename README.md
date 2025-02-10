@@ -1,2 +1,2 @@
 # pocket-to-blogger
-Get the favorited articles on pocket and post to blogger/bsky
+Get the favorited articles on pocket and post to blogger/bsky/twitter

@@ -1,6 +1,7 @@
 const blogger = require('./blogger');
 const getpocket = require('./getpocket');
 const bsky = require('./bsky');
+const twitter = require('./twitter');
 
 require('dotenv').config();
 
@@ -31,7 +32,7 @@ async function main() {
       debug.posted.push(pocketPost);
 
       const blogUrl = newBloggerPost.url;
-      console.log({title, excerpt, blogUrl, image })
+      await twitter.createPost({ title, excerpt, blogUrl, imageUrl: image });
       await bsky.createPost({ title, excerpt, blogUrl, imageUrl: image });
     } else {
       debug.ignored.push(pocketPost);
